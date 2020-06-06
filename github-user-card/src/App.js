@@ -1,26 +1,42 @@
-import React from 'react';
+import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from "axios";
+import GhUsercard from "./Components/GhUsercard";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+
+    state = {
+        githubUserData: {},
+        followers: []
+    }
+
+    componentDidMount() {
+        //todo: personal stretch: make a form to search for the username
+        const githubUsername = "ClydeFrog04";
+        axios.get(`https://api.github.com/users/${githubUsername}`)
+            .then(res => {
+                console.log(res);
+                this.setState({
+                    githubUserData: res.data,
+                });
+                return axios.get(res.data.followers_url);
+            })
+            .then(res => {
+                console.log("Followers: ", res);
+                this.setState({...this.state, followers: res.data});
+            })
+            .catch(console.log);
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <GhUsercard userData={this.state.githubUserData}/>
+                {this.state.followers.map(user => {
+                    return <GhUsercard userData={user}/>
+                })}
+            </div>
+        );
+    }
 }
-
-export default App;

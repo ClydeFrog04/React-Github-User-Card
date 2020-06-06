@@ -1,0 +1,1 @@
+Components needed: user card, app.js
