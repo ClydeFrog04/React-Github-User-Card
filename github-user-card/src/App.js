@@ -16,14 +16,13 @@ export default class App extends Component {
         const githubUsername = "ClydeFrog04";
         axios.get(`https://api.github.com/users/${githubUsername}`)
             .then(res => {
-                console.log(res);
                 this.setState({
                     githubUserData: res.data,
                 });
                 return axios.get(res.data.followers_url);
             })
             .then(res => {
-                console.log("Followers: ", res);
+                console.log(res);
                 this.setState({...this.state, followers: res.data});
             })
             .catch(console.log);
@@ -34,7 +33,7 @@ export default class App extends Component {
             <div className="App">
                 <GhUsercard userData={this.state.githubUserData}/>
                 {this.state.followers.map(user => {
-                    return <GhUsercard userData={user}/>
+                    return <GhUsercard key={user.id} userData={user}/>
                 })}
             </div>
         );
