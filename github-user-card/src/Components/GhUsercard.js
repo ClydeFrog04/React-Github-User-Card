@@ -26,7 +26,8 @@ export default class GhUsercard extends Component{
         if(!this.props.userData.name){
             axios.get(this.props.userData.url)
                 .then(res => {
-                    this.setState({...this.state, name: res.data.name});
+                    const usersName = res.data.name || "name"; //this is needed in case the user does not have a name on their account
+                    this.setState({...this.state, name: usersName});
                 })
                 .catch(console.log);
         }
@@ -46,7 +47,9 @@ export default class GhUsercard extends Component{
                     <h2>{this.props.userData.name ? this.props.userData.name : this.state.name}</h2>
                     <h3 className={this.state.collapsed ? "hide" : ""}>{this.props.userData.login}</h3>
                     <p className={this.state.collapsed ? "hide" : ""}>{this.props.userData.location}</p>
-                    <a className={this.state.collapsed ? "hide" : ""} href={this.props.userData.html_url} target="_blank"><p>{this.props.userData.html_url}</p></a>
+                    <a rel="noopener noreferrer" className={this.state.collapsed ? "hide" : ""} href={this.props.userData.html_url} target="_blank">
+                        <p>{this.props.userData.html_url}</p>
+                    </a>
                     <p className={this.state.collapsed ? "hide" : ""}>Followers: {this.props.userData.followers}</p>
                     <p className={this.state.collapsed ? "hide" : ""}>Following: {this.props.userData.following}</p>
                     <p className={this.state.collapsed ? "hide" : ""}>Bio: {this.props.userData.bio}</p>
